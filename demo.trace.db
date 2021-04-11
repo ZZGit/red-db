@@ -1,0 +1,182 @@
+2021-04-11 00:36:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+INSERT INTO user (name) VALUES (?) [42102-200]
+2021-04-11 01:03:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "SCHEMA_MIGRATIONS" not found; SQL statement:
+SELECT 1 FROM schema_migrations [42102-200]
+2021-04-11 01:59:39 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "FROM[*] USER"; SQL statement:
+FROM user [42000-200]
+2021-04-11 01:59:39 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "FROM[*] USER"; SQL statement:
+FROM user [42000-200]
+2021-04-11 02:00:18 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "FROM[*] USER"; SQL statement:
+FROM user [42000-200]
+2021-04-11 02:00:18 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "FROM[*] USER"; SQL statement:
+FROM user [42000-200]
+2021-04-11 02:33:48 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:33:48 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:34:16 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:34:16 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:06 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:06 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:26 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:26 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:55 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 02:35:55 jdbc[23]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "USER[*]  "; expected "UPDATE, USE"; SQL statement:
+user   [42001-200]
+2021-04-11 10:54:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "NULL[*]"; SQL statement:
+NULL [42000-200]
+2021-04-11 10:54:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "NULL[*]"; SQL statement:
+NULL [42000-200]
+2021-04-11 15:19:58 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "DELETE_FLAG" not found; SQL statement:
+SELECT count(*) WHERE delete_flag = FALSE [42122-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:453)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:163)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:145)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:190)
+	at org.h2.command.dml.Select.prepare(Select.java:1209)
+	at org.h2.command.Parser.prepareCommand(Parser.java:744)
+	at org.h2.engine.Session.prepareLocal(Session.java:657)
+	at org.h2.engine.Session.prepareCommand(Session.java:595)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1235)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:76)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:1154)
+	at com.p6spy.engine.wrapper.ConnectionWrapper.prepareStatement(ConnectionWrapper.java:133)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:344)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at next.jdbc.prepare$create$fn__7137.invoke(prepare.clj:116)
+	at next.jdbc.prepare$create.invokeStatic(prepare.clj:115)
+	at next.jdbc.prepare$create.invoke(prepare.clj:86)
+	at next.jdbc.result_set$eval7870$fn__7878.invoke(result_set.clj:912)
+	at next.jdbc.protocols$eval6782$fn__6813$G__6773__6822.invoke(protocols.clj:33)
+	at next.jdbc$execute_BANG_.invokeStatic(jdbc.clj:241)
+	at next.jdbc$execute_BANG_.invoke(jdbc.clj:225)
+	at red_db.core$execute_BANG_.invokeStatic(core.clj:13)
+	at red_db.core$execute_BANG_.invoke(core.clj:12)
+	at red_db.core$get_list.invokeStatic(core.clj:60)
+	at red_db.core$get_list.doInvoke(core.clj:55)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at red_db.core_test$eval19698.invokeStatic(form-init3252327139264403639.clj:61)
+	at red_db.core_test$eval19698.invoke(form-init3252327139264403639.clj:61)
+	at clojure.lang.Compiler.eval(Compiler.java:7177)
+	at clojure.lang.Compiler.eval(Compiler.java:7132)
+	at clojure.core$eval.invokeStatic(core.clj:3214)
+	at clojure.core$eval.invoke(core.clj:3210)
+	at nrepl.middleware.interruptible_eval$evaluate$fn__9085$fn__9086.invoke(interruptible_eval.clj:87)
+	at clojure.lang.AFn.applyToHelper(AFn.java:152)
+	at clojure.lang.AFn.applyTo(AFn.java:144)
+	at clojure.core$apply.invokeStatic(core.clj:665)
+	at clojure.core$with_bindings_STAR_.invokeStatic(core.clj:1973)
+	at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1973)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at nrepl.middleware.interruptible_eval$evaluate$fn__9085.invoke(interruptible_eval.clj:87)
+	at clojure.main$repl$read_eval_print__9086$fn__9089.invoke(main.clj:437)
+	at clojure.main$repl$read_eval_print__9086.invoke(main.clj:437)
+	at clojure.main$repl$fn__9095.invoke(main.clj:458)
+	at clojure.main$repl.invokeStatic(main.clj:458)
+	at clojure.main$repl.doInvoke(main.clj:368)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:665)
+	at clojure.core$apply.invoke(core.clj:660)
+	at refactor_nrepl.ns.slam.hound.regrow$wrap_clojure_repl$fn__15352.doInvoke(regrow.clj:20)
+	at clojure.lang.RestFn.invoke(RestFn.java:1523)
+	at nrepl.middleware.interruptible_eval$evaluate.invokeStatic(interruptible_eval.clj:84)
+	at nrepl.middleware.interruptible_eval$evaluate.invoke(interruptible_eval.clj:56)
+	at nrepl.middleware.interruptible_eval$interruptible_eval$fn__9116$fn__9120.invoke(interruptible_eval.clj:152)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at nrepl.middleware.session$session_exec$main_loop__9183$fn__9187.invoke(session.clj:202)
+	at nrepl.middleware.session$session_exec$main_loop__9183.invoke(session.clj:201)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:748)
+2021-04-11 15:19:58 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "DELETE_FLAG" not found; SQL statement:
+SELECT count(*) WHERE delete_flag = FALSE [42122-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:453)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:163)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:145)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:190)
+	at org.h2.command.dml.Select.prepare(Select.java:1209)
+	at org.h2.command.Parser.prepareCommand(Parser.java:744)
+	at org.h2.engine.Session.prepareLocal(Session.java:657)
+	at org.h2.engine.Session.prepareCommand(Session.java:595)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1235)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:76)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:352)
+	at com.p6spy.engine.wrapper.ConnectionWrapper.prepareStatement(ConnectionWrapper.java:118)
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:337)
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java)
+	at next.jdbc.prepare$create$fn__7137.invoke(prepare.clj:119)
+	at next.jdbc.prepare$create.invokeStatic(prepare.clj:115)
+	at next.jdbc.prepare$create.invoke(prepare.clj:86)
+	at next.jdbc.result_set$eval7870$fn__7878.invoke(result_set.clj:912)
+	at next.jdbc.protocols$eval6782$fn__6813$G__6773__6822.invoke(protocols.clj:33)
+	at next.jdbc$execute_BANG_.invokeStatic(jdbc.clj:241)
+	at next.jdbc$execute_BANG_.invoke(jdbc.clj:225)
+	at red_db.core$execute_BANG_.invokeStatic(core.clj:13)
+	at red_db.core$execute_BANG_.invoke(core.clj:12)
+	at red_db.core$get_list.invokeStatic(core.clj:60)
+	at red_db.core$get_list.doInvoke(core.clj:55)
+	at clojure.lang.RestFn.invoke(RestFn.java:408)
+	at red_db.core_test$eval19698.invokeStatic(form-init3252327139264403639.clj:61)
+	at red_db.core_test$eval19698.invoke(form-init3252327139264403639.clj:61)
+	at clojure.lang.Compiler.eval(Compiler.java:7177)
+	at clojure.lang.Compiler.eval(Compiler.java:7132)
+	at clojure.core$eval.invokeStatic(core.clj:3214)
+	at clojure.core$eval.invoke(core.clj:3210)
+	at nrepl.middleware.interruptible_eval$evaluate$fn__9085$fn__9086.invoke(interruptible_eval.clj:87)
+	at clojure.lang.AFn.applyToHelper(AFn.java:152)
+	at clojure.lang.AFn.applyTo(AFn.java:144)
+	at clojure.core$apply.invokeStatic(core.clj:665)
+	at clojure.core$with_bindings_STAR_.invokeStatic(core.clj:1973)
+	at clojure.core$with_bindings_STAR_.doInvoke(core.clj:1973)
+	at clojure.lang.RestFn.invoke(RestFn.java:425)
+	at nrepl.middleware.interruptible_eval$evaluate$fn__9085.invoke(interruptible_eval.clj:87)
+	at clojure.main$repl$read_eval_print__9086$fn__9089.invoke(main.clj:437)
+	at clojure.main$repl$read_eval_print__9086.invoke(main.clj:437)
+	at clojure.main$repl$fn__9095.invoke(main.clj:458)
+	at clojure.main$repl.invokeStatic(main.clj:458)
+	at clojure.main$repl.doInvoke(main.clj:368)
+	at clojure.lang.RestFn.applyTo(RestFn.java:137)
+	at clojure.core$apply.invokeStatic(core.clj:665)
+	at clojure.core$apply.invoke(core.clj:660)
+	at refactor_nrepl.ns.slam.hound.regrow$wrap_clojure_repl$fn__15352.doInvoke(regrow.clj:20)
+	at clojure.lang.RestFn.invoke(RestFn.java:1523)
+	at nrepl.middleware.interruptible_eval$evaluate.invokeStatic(interruptible_eval.clj:84)
+	at nrepl.middleware.interruptible_eval$evaluate.invoke(interruptible_eval.clj:56)
+	at nrepl.middleware.interruptible_eval$interruptible_eval$fn__9116$fn__9120.invoke(interruptible_eval.clj:152)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at nrepl.middleware.session$session_exec$main_loop__9183$fn__9187.invoke(session.clj:202)
+	at nrepl.middleware.session$session_exec$main_loop__9183.invoke(session.clj:201)
+	at clojure.lang.AFn.run(AFn.java:22)
+	at java.lang.Thread.run(Thread.java:748)

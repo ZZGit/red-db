@@ -1,0 +1,43 @@
+(ns red-db.core-test
+  (:require
+   [mount.core :as mount]
+   [migratus.core :as migratus]
+   [clojure.test :refer :all]
+   [red-db.util :refer :all]
+   [red-db.core :as red-db]))
+
+(def config {:store                :database
+             :migration-dir        "migrations/"
+             :init-script          "init.sql"
+             :db {:connection-uri "jdbc:h2:./demo"}})
+
+(defn create-migratus
+  [file-name]
+  (migratus/create config file-name))
+
+(defn migrate []
+  (migratus/migrate config))
+
+(defn reset []
+  (migratus/reset config))
+
+(defn start []
+  (mount/start))
+
+(defn stop []
+  (mount/stop))
+
+(deftest test-insert
+  (testing "插入单条记录"
+    (let [row (insert :user {:name "tom" :age 10 :email "18354@qq.com"})]
+      (is (pos? (:id row)))))
+  (testing "插入多条记录"
+    (let [count (insert-batch :user [{:name "tom" :age 10 :email "18354@qq.com"}
+                                     {:name "jerry" :age 11 :email "18354@qq.com"}])]
+      (is (= 2 count)))))
+
+(deftest test-get-one
+  (testing "查询单条记录"
+    (let [row (get-one :user {:age 11 :name "jerry"})]
+      (is (= (:name row) "jerry")))))
+

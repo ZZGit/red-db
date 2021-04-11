@@ -1,0 +1,10 @@
+{:datasource
+ {;:adapter "h2"
+  :driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
+  :jdbc-url     "jdbc:p6spy:h2:./demo"
+  }
+ :red-db
+ {:logic-delete? true
+  :logic-delete-field :delete-flag
+  :logic-delete-value true
+  :logic-not-delete-value false}}
