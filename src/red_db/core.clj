@@ -21,6 +21,7 @@
   [sqlmap & opt]
   (let [ds (build/get-datasource opt)]
     (-> sqlmap
+        (build/add-logic-delete-where)
         (build/format-sql)
         (execute! ds))))
 

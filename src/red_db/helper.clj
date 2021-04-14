@@ -1,27 +1,194 @@
 (ns red-db.helper
   (:require
+   [honeysql.core :as sql]
    [honeysql.helpers :as helpers]))
 
-(defn like
-  ([v]
-   {:like (str "%" v "%")})
-  ([k v]
-   [:like k (str "%" v "%")]))
+(def select helpers/select)
+(def from helpers/from)
+(def where helpers/where)
+(def order-by helpers/order-by)
+(def limit helpers/limit)
+(def offset helpers/offset)
+(def modifiers helpers/modifiers)
+(def join helpers/join)
+(def left-join helpers/left-join)
+(def right-join helpers/right-join)
 
-(defn like-left
-  ([v]
-   {:like (str "%" v)})
-  ([k v]
-   [:like k (str "%" v)]))
+(defn pagination
+  [sqlmap page size]
+  (sql/build sqlmap :offset (* page size)  :limit size))
 
-(defn like-right
+(defn eq
   ([v]
-   {:like (str v "%")})
+   {:= v})
   ([k v]
-   [:like k (str v "%")]))
+   [:= k v])
+  ([b k v]
+   (when b (eq k v))))
+
+(defn ne
+  ([v]
+   {:<> v})
+  ([k v]
+   [:<> k v])
+  ([b k v]
+   (when b (ne k v))))
 
 (defn gt
+  "大于 >"
   ([v]
    {:> v})
   ([k v]
-   [:> k v]))
+   [:> k v])
+  ([b k v]
+   (when b (gt k v))))
+
+(defn ge
+  "大于等于 >="
+  ([v]
+   {:>= v})
+  ([k v]
+   [:>= k v])
+  ([b k v]
+   (when b (ge k v))))
+
+(defn lt
+  "小于 <"
+  ([v]
+   {:< v})
+  ([k v]
+   [:< k v])
+  ([b k v]
+   (when b (lt k v))))
+
+(defn le
+  "小于等于 <="
+  ([v]
+   {:<= v})
+  ([k v]
+   [:<= k v])
+  ([b k v]
+   (when b (le k v))))
+
+(defn between
+  "BETWEEN 值1 AND 值2"
+  ([v1 v2]
+   {:between [v1 v2]})
+  ([k v1 v2]
+   [:between k v1 v2])
+  ([b k v1 v2]
+   (when b (between k v1 v2))))
+
+(defn like
+  "LIKE '%值%'"
+  ([v]
+   {:like (str "%" v "%")})
+  ([k v]
+   [:like k (str "%" v "%")])
+  ([b k v]
+   (when b (like k v))))
+
+(defn like-left
+  "LIKE '%值'"
+  ([v]
+   {:like (str "%" v)})
+  ([k v]
+   [:like k (str "%" v)])
+  ([b k v]
+   (when b (like-left k v))))
+
+(defn like-right
+  "LIKE '值%'"
+  ([v]
+   {:like (str v "%")})
+  ([k v]
+   [:like k (str v "%")])
+  ([b k v]
+   (when b (like-right k v))))
+
+(defn is-null
+  "字段 IS NULL"
+  ([]
+   {:= nil})
+  ([k]
+   [:= k nil])
+  ([b k]
+   (when b (is-null k))))
+
+(defn is-not-null
+  "字段 IS NULL"
+  ([]
+   {:not= nil})
+  ([k]
+   [:not= k nil])
+  ([b k]
+   (when b (is-not-null k))))
+
+(defn in
+  "小于等于 <="
+  ([v]
+   {:in v})
+  ([k v]
+   [:in k v])
+  ([b k v]
+   (when b (in k v))))
+
+(defn OR
+  "拼接 OR"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (into [:or] (rest args)))
+      (into [:or] args))))
+
+(defn AND
+  "拼接 AND"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (into [:and] (rest args)))
+      (into [:and] args))))
+
+(defn group
+  "分组：GROUP BY 字段"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (apply helpers/group (rest args)))
+      (apply helpers/group args))))
+
+(defn- to-asc-vals [ks]
+  (map (fn [k] [k :asc]) ks))
+
+(defn order-by-asc
+  "升序排序"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (apply helpers/order-by (to-asc-vals (rest args))))
+      (apply helpers/group (to-asc-vals args)))))
+
+(defn- to-desc-vals [ks]
+  (map (fn [k] [k :desc]) ks))
+
+(defn order-by-desc
+  "降序排序"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (apply helpers/order-by (to-desc-vals (rest args))))
+      (apply helpers/group (to-desc-vals args)))))
+
+(defn having
+  "HAVING ( sql语句 )"
+  [& args]
+  (let [first-arg (first args)]
+    (if (boolean? first-arg)
+      (when first-arg
+        (apply helpers/having (rest args)))
+      (apply helpers/having args))))

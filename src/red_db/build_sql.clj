@@ -14,7 +14,7 @@
 (defn format-sql [sqlmap]
   (sql/format sqlmap))
 
-(defn- add-logic-delete-where [sqlmap]
+(defn add-logic-delete-where [sqlmap]
   (if (config/logic-delete?)
     (->> (:from sqlmap)
          (map config/get-logic-delete-where)
