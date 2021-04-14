@@ -1,22 +1,24 @@
-(ns red-db.util
+(ns red-db.build-sql
   (:require
    [honeysql.core :as sql]
    [red-db.ds :refer [*ds*]]
    [red-db.config :as config]
    [clojure.set :refer [rename-keys]]
-   [honeysql.helpers :refer [merge-where where delete-from] :as helper]))
+   [honeysql.helpers :as helper]))
 
 (defn get-datasource
   "获取数据源"
   [opt]
   (or (:*ds* opt) *ds*))
 
-(defn- format-sql [sqlmap]
+(defn format-sql [sqlmap]
   (sql/format sqlmap))
 
 (defn- add-logic-delete-where [sqlmap]
   (if (config/logic-delete?)
-    (merge-where sqlmap (config/get-logic-delete-where))
+    (->> (:from sqlmap)
+         (map config/get-logic-delete-where)
+         (reduce helper/merge-where sqlmap))
     sqlmap))
 
 (defn- mp->vp
@@ -31,7 +33,7 @@
 (defn- build-simple-sqlmap [from-key props]
   (let [sqlmap {:select [:*]
              :from [from-key]}]
-    (apply where (into [sqlmap] (mp->vp props)))))
+    (apply helper/where (into [sqlmap] (mp->vp props)))))
 
 (defn- build-sqlmap [args]
   (let [first-arg (first args)]
@@ -47,10 +49,17 @@
       (add-logic-delete-where)
       (format-sql)))
 
+(defn build-page-sql
+  "构造分页查询sql语句"
+  [sqlmap]
+  (-> sqlmap
+      (add-logic-delete-where)
+      (format-sql)))
+
 (defn- build-simple-count-sqlmap [from-key props]
   (let [sqlmap {:select [[:%count.* :count]]
              :from [from-key]}]
-    (apply where (into [sqlmap] (mp->vp props)))))
+    (apply helper/where (into [sqlmap] (mp->vp props)))))
 
 (defn- build-count-sqlmap [args]
   (let [first-arg (first args)]
@@ -67,8 +76,8 @@
       (format-sql)))
 
 (defn- build-simple-delete-sqlmap [k props]
-  (let [sqlmap (delete-from k)]
-    (apply where (into [sqlmap] (mp->vp props)))))
+  (let [sqlmap (helper/delete-from k)]
+    (apply helper/where (into [sqlmap] (mp->vp props)))))
 
 (defn- build-delete-sqlmap
   [args]
@@ -86,7 +95,7 @@
 
 (defn- build-simple-update-sqlmap [k props]
   (let [sqlmap {:update k}]
-    (apply where (into [sqlmap] (mp->vp props)))))
+    (apply helper/where (into [sqlmap] (mp->vp props)))))
 
 (defn- build-logic-delete-sqlmap
   [args]

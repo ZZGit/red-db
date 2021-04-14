@@ -4,9 +4,8 @@
    [migratus.core :as migratus]
    [honeysql.helpers :refer [select from where delete-from] :as helper]
    [clojure.test :refer :all]
-   [red-db.util :refer :all]
    [red-db.core :as red-db]
-   [red-db.cond :refer :all]))
+   [red-db.helper :refer :all]))
 
 (def config {:store                :database
              :migration-dir        "migrations/"

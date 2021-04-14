@@ -1,4 +1,6 @@
-(ns red-db.cond)
+(ns red-db.helper
+  (:require
+   [honeysql.helpers :as helpers]))
 
 (defn like
   ([v]
