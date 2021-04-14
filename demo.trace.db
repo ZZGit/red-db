@@ -180,3 +180,9 @@ SELECT count(*) WHERE delete_flag = FALSE [42122-200]
 	at nrepl.middleware.session$session_exec$main_loop__9183.invoke(session.clj:201)
 	at clojure.lang.AFn.run(AFn.java:22)
 	at java.lang.Thread.run(Thread.java:748)
+2021-04-14 11:30:44 jdbc[33]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE USER WHERE[*] (ID = ? AND DELETE_FLAG = TRUE)"; expected "., AS, SET"; SQL statement:
+UPDATE user WHERE (id = ? AND delete_flag = TRUE) [42001-200]
+2021-04-14 11:31:18 jdbc[33]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "UPDATE USER WHERE[*] (ID = ? AND DELETE_FLAG = TRUE)"; expected "., AS, SET"; SQL statement:
+UPDATE user WHERE (id = ? AND delete_flag = TRUE) [42001-200]

@@ -17,3 +17,9 @@
    {:like (str v "%")})
   ([k v]
    [:like k (str v "%")]))
+
+(defn gt
+  ([v]
+   {:> v})
+  ([k v]
+   [:> k v]))

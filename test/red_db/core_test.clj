@@ -2,18 +2,16 @@
   (:require
    [mount.core :as mount]
    [migratus.core :as migratus]
-   [honeysql.helpers :refer [select from where]]
+   [honeysql.helpers :refer [select from where delete-from] :as helper]
    [clojure.test :refer :all]
    [red-db.util :refer :all]
    [red-db.core :as red-db]
-   [red-db.cond :refer [like]]))
+   [red-db.cond :refer :all]))
 
 (def config {:store                :database
              :migration-dir        "migrations/"
              :init-script          "init.sql"
              :db {:connection-uri "jdbc:h2:./demo"}})
-
-(Class/forName "com.p6spy.engine.spy.P6SpyDriver")
 
 (defn create-migratus
   [file-name]
@@ -73,4 +71,3 @@
                   :where [:and [:= :age 11] [:= :name "jerry"]]}
           rows (red-db/get-list sqlmap)]
       (is (pos? (count rows))))))
-

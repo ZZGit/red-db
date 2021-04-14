@@ -7,17 +7,15 @@
    [honeysql.core :as sql]
    [honeysql.helpers :as help]))
 
-(Class/forName "com.p6spy.engine.spy.P6SpyDriver")
+(def ^:private exec-option
+  {:return-keys true
+   :builder-fn rs/as-unqualified-lower-maps})
 
 (defn- execute! [sql ds]
-  (jdbc/execute!
-   ds sql {:return-keys true
-           :builder-fn rs/as-unqualified-lower-maps}))
+  (jdbc/execute! ds sql exec-option))
 
 (defn- execute-one! [sql ds]
-  (jdbc/execute-one!
-   ds sql {:return-keys true
-           :builder-fn rs/as-unqualified-lower-maps}))
+  (jdbc/execute-one! ds sql exec-option))
 
 (defn insert
   "插入记录"
@@ -39,11 +37,18 @@
 
 (defn update
   "更新记录"
-  [])
+  [& args]
+  (let [ds (util/get-datasource (last args))
+        sql (util/build-update-sql (first args))]
+    (execute! sql ds)))
 
 (defn delete
   "删除记录"
-  [])
+  [& args]
+  (let [ds (util/get-datasource (last args))
+        sql (util/build-deldete-sql args)]
+    (-> (jdbc/execute-one! ds sql)
+        :next.jdbc/update-count)))
 
 (defn get-one
   "查询单条记录"

@@ -17,6 +17,13 @@
   (let [result (:logic-delete? (get-db-config))]
     (if (boolean? result) result false)))
 
+(defn get-logic-delete
+  "逻辑删除条件"
+  []
+  (let [{:keys [logic-delete-field
+                logic-delete-value]} (get-db-config)]
+    {logic-delete-field logic-delete-value}))
+
 (defn get-logic-delete-where
   "获取逻辑删除查询条件"
   []
