@@ -27,7 +27,7 @@
 (defn stop []
   (mount/stop))
 
-(deftest test-insert
+#_(deftest test-insert
   (testing "插入单条记录"
     (let [row (red-db/insert :user {:name "tom" :age 10 :email "18354@qq.com"})]
       (is (pos? (:id row)))))
@@ -36,7 +36,7 @@
                                      {:name "jerry" :age 11 :email "18354@qq.com"}])]
       (is (= 2 (count rows))))))
 
-(deftest test-get-one
+#_(deftest test-get-one
   (testing "查询单条记录(简写形式)"
     (let [row (red-db/get-one :user {:age 11 :name (like "jerry")})]
       (is (= (:name row) "jerry"))))
@@ -53,7 +53,7 @@
                   (red-db/get-one))]
       (is (= (:name row) "jerry")))))
 
-(deftest test-get-one
+#_(deftest test-get-one
   (testing "查询多条记录"
     (let [rows (red-db/get-list :user {:age 11 :name "jerry"})]
       (is (pos? (count rows)))))

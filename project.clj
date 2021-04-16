@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [conman "0.9.1"]
                  [honeysql "1.0.461"]
-                 [cprop "0.1.17"]]
+                 [cprop "0.1.17"]
+                 [camel-snake-kebab "0.4.2"]]
   :profiles {:dev
              {:resource-paths ["resources"]
               :dependencies [[mount "0.1.16"]

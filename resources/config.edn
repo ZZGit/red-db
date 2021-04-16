@@ -4,7 +4,7 @@
   :jdbc-url     "jdbc:p6spy:h2:./demo"
   }
  :red-db
- {:logic-delete? true
+ {:logic-delete? false
   :logic-delete-field :delete-flag
   :logic-delete-value true
   :logic-not-delete-value false}}

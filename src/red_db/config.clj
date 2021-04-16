@@ -1,7 +1,8 @@
 (ns red-db.config
   (:require
-   [cprop.core :refer [load-config]]))
-
+    [cprop.core :refer [load-config]]
+    [cprop.source :as source]
+    [mount.core :refer [args defstate]]))
 
 (defn get-datasource
   "获取数据源"
