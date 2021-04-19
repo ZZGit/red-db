@@ -1,5 +1,7 @@
 (ns red-db.core-test
   (:require
+   [red-db.build-sql :as build]
+   [next.jdbc :as jdbc]
    [mount.core :as mount]
    [migratus.core :as migratus]
    [clojure.test :refer :all]

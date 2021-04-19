@@ -1,15 +1,9 @@
 (ns red-db.build-sql
   (:require
    [honeysql.core :as sql]
-   [red-db.ds :refer [*ds*]]
    [red-db.config :as config]
    [clojure.set :refer [rename-keys]]
    [honeysql.helpers :as helper]))
-
-(defn get-datasource
-  "获取数据源"
-  [opt]
-  (or (:*ds* opt) *ds*))
 
 (defn format-sql [sqlmap]
   (sql/format sqlmap))

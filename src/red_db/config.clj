@@ -4,7 +4,7 @@
     [cprop.source :as source]
     [mount.core :refer [args defstate]]))
 
-(defn get-datasource
+(defn get-datasource-config
   "获取数据源"
   []
   (:datasource (load-config)))
