@@ -5,8 +5,21 @@
    [clojure.set :refer [rename-keys]]
    [honeysql.helpers :as helper]))
 
+(defn- add-select-* [sqlmap]
+  (if (:select sqlmap)
+    sqlmap
+    (assoc sqlmap :select [:*])))
+
+(defn- dissoc-empty-where [sqlmap]
+  (if (seq (:where sqlmap))
+    sqlmap
+    (dissoc sqlmap :where)))
+
 (defn format-sql [sqlmap]
-  (sql/format sqlmap))
+  (-> sqlmap
+      (add-select-*)
+      (dissoc-empty-where)
+      (sql/format)))
 
 (defn add-logic-delete-where [sqlmap]
   (if (config/logic-delete?)

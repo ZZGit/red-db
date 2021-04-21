@@ -11,7 +11,10 @@
 (def config {:store                :database
              :migration-dir        "migrations/"
              :init-script          "init.sql"
-             :db {:connection-uri "jdbc:h2:./demo"}})
+             :db {:connection-uri
+                  "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
+                  ;;"jdbc:h2:./demo"
+                  }})
 
 (defn create-migratus
   [file-name]
@@ -29,12 +32,38 @@
 (defn stop []
   (mount/stop))
 
-#_(deftest test-insert
+(red-db/bind-connection "sql/user.sql")
+
+(-> (select :name :age)
+    (from :user)
+    (pagination 0 10)
+    (where (AND (eq false :age 10)
+                (like false :name "tom")
+                (OR (eq :age 10)
+                    (like :name "tom"))))
+    (red-db/get-page))
+
+(-> 
+    (from :user)
+    (limit 2)
+    (red-db/get-count))
+
+(defn test-transaction []
+  (red-db/with-transaction
+    (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})
+    (throw (Exception. "error"))))
+
+(defn test-transaction2 []
+  (red-db/with-transaction
+    (insert-user! {:name "tom" :age 10 :email "18354@qq.com" :delete_flag 0})
+    (throw (Exception. "error"))))
+
+(deftest test-insert
   (testing "插入单条记录"
-    (let [row (red-db/insert :user {:name "tom" :age 10 :email "18354@qq.com"})]
-      (is (pos? (:id row)))))
+    (let [row (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})]
+      (is (not (nil? row)))))
   (testing "插入多条记录"
-    (let [rows (red-db/insert-batch :user [{:name "tom" :age 10 :email "18354@qq.com"}
+    (let [rows (red-db/insert-multi! :user [{:name "tom" :age 10 :email "18354@qq.com"}
                                      {:name "jerry" :age 11 :email "18354@qq.com"}])]
       (is (= 2 (count rows))))))
 

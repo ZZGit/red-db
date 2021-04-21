@@ -7,7 +7,12 @@
 (defn get-datasource-config
   "获取数据源"
   []
-  (:datasource (load-config)))
+  (let [config (load-config)]
+    (if-let [ds-pool (:datasource config)]
+      ds-pool
+      (if-let [ds-url (:database-url config)]
+        {:jdbc-url ds-url}
+        (throw (Exception. "no database config"))))))
 
 (defn- get-db-config []
   (:red-db (load-config)))

@@ -4,7 +4,6 @@
    [red-db.ds :as ds]
    [next.jdbc :as jdbc]
    [conman.core :as conman]
-   [camel-snake-kebab.core :as csk]
    [next.jdbc.result-set :as rs]
    [red-db.build-sql :as build]
    [honeysql.helpers :as help]))
@@ -103,5 +102,11 @@
              ~@body)))
       `(next.jdbc/with-transaction [tx# (red-db.ds/get-datasource nil)]
          (binding [red-db.ds/*t-ds* tx#]
-           ~@args)))
-    ))
+           ~@args)))))
+
+(defmacro bind-connection [& args]
+  (let [first-arg (first args)
+        rest-args (rest args)]
+    (if (string? first-arg)
+      `(conman.core/bind-connection (ds/get-datasource) ~@args)
+      `(conman.core/bind-connection ~first-arg ~@rest-args))))

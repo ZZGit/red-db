@@ -12,6 +12,7 @@
              {:resource-paths ["resources"]
               :dependencies [[mount "0.1.16"]
                              [com.h2database/h2 "1.4.200"]
+                             [mysql/mysql-connector-java "8.0.16"]
                              [migratus "1.3.5"]
                              [p6spy/p6spy "3.8.7"]]}}
   :repl-options {:init-ns red-db.core-test})

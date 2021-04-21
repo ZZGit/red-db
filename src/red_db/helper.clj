@@ -133,23 +133,26 @@
   ([b k v]
    (when b (in k v))))
 
+(defn- valid-args [args]
+  (filter #(not (nil? %)) args))
+
+(defn- get-where-args [args]
+  (let [first-arg (first args)]
+    (if (boolean? (first args))
+      (when first-arg (valid-args (rest args)))
+      (valid-args args))))
+
 (defn OR
   "拼接 OR"
   [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (into [:or] (rest args)))
-      (into [:or] args))))
+  (let [vargs (get-where-args args)]
+    (when (seq vargs) (into [:or] vargs))))
 
 (defn AND
   "拼接 AND"
   [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (into [:and] (rest args)))
-      (into [:and] args))))
+  (let [vargs (get-where-args args)]
+    (when (seq vargs) (into [:and] vargs))))
 
 (defn group
   "分组：GROUP BY 字段"
