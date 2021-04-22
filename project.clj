@@ -6,14 +6,14 @@
   :deploy-repositories [["clojars" {:url "https://repo.clojars.org"
                                     :sign-releases false}]]
   :dependencies [[org.clojure/clojure "1.10.1"]
+                 [mount "0.1.16"]
                  [conman "0.9.1"]
                  [honeysql "1.0.461"]
                  [cprop "0.1.17"]
                  [camel-snake-kebab "0.4.2"]]
   :profiles {:dev
              {:resource-paths ["resources"]
-              :dependencies [[mount "0.1.16"]
-                             [com.h2database/h2 "1.4.200"]
+              :dependencies [[com.h2database/h2 "1.4.200"]
                              [mysql/mysql-connector-java "8.0.16"]
                              [migratus "1.3.5"]
                              [p6spy/p6spy "3.8.7"]]}}
