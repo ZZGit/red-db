@@ -17,8 +17,6 @@
 
 (defn format-sql [sqlmap]
   (-> sqlmap
-      (add-select-*)
-      (dissoc-empty-where)
       (sql/format)))
 
 (defn add-logic-delete-where [sqlmap]
@@ -54,6 +52,8 @@
   (-> args
       (build-sqlmap)
       (add-logic-delete-where)
+      (add-select-*)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn build-page-sql
@@ -61,6 +61,8 @@
   [sqlmap]
   (-> sqlmap
       (add-logic-delete-where)
+      (add-select-*)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn- build-simple-count-sqlmap [from-key props]
@@ -80,6 +82,7 @@
   (-> args
       (build-count-sqlmap)
       (add-logic-delete-where)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn- build-simple-delete-sqlmap [k props]
@@ -98,6 +101,7 @@
   [args]
   (-> args
       (build-delete-sqlmap)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn- build-simple-update-sqlmap [k props]
@@ -122,6 +126,7 @@
   (-> args
       (build-logic-delete-sqlmap)
       (set-logic-delete)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn build-deldete-sql
@@ -135,6 +140,7 @@
   [sqlmap]
   (-> sqlmap
       (add-logic-delete-where)
+      (dissoc-empty-where)
       (format-sql)))
 
 (defn build-insert-row

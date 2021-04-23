@@ -82,13 +82,26 @@
         sql (build/build-count-sql args)]
     (:count (jdbc-execute-one! sql ds))))
 
+(defn- get-total-page
+  [count size]
+  (if (or (zero? count)
+          (zero? size))
+    0
+    (int (Math/ceil (/ count size)))))
+
 (defn get-page
   "查询分页记录"
   [sqlmap & opt]
   (let [ds (ds/get-datasource opt)
-        sql (build/build-page-sql sqlmap)]
-    {:rows (jdbc-execute! sql ds)
-     :count (get-count (dissoc sqlmap :limit :offset))}))
+        sql (build/build-page-sql sqlmap)
+        size (:limit sqlmap)
+        count (get-count (dissoc sqlmap :limit :offset))
+        rows (if (zero? count) [] (jdbc-execute! sql ds))]
+    {:rows rows
+     :page (int (/ (:offset sqlmap) size))
+     :size size
+     :total-count count 
+     :total-page (get-total-page count size)}))
 
 (defmacro with-transaction
   "数据库事务"

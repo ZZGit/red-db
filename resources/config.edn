@@ -1,9 +1,7 @@
-{:database-url "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
- :datasource_b
- {;:adapter "h2"
-  :driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
-  :jdbc-url     "jdbc:p6spy:h2:./demo"
-  }
+{:database-url_b "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
+ :datasource
+ {:driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
+  :jdbc-url     "jdbc:p6spy:h2:./demo"}
  :red-db
  {:logic-delete? false
   :logic-delete-field :delete-flag

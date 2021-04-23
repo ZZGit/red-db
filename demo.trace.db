@@ -517,3 +517,9 @@ SELECT * FROM order_address [42102-200]
 2021-04-16 16:53:43 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ORDER_ADDRESS" not found; SQL statement:
 SELECT * FROM order_address [42102-200]
+2021-04-23 10:28:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * INSERT[*] INTO USER (NAME, AGE, EMAIL) VALUES (?, ?, ?)"; SQL statement:
+SELECT * INSERT INTO user (name, age, email) VALUES (?, ?, ?) [42000-200]
+2021-04-23 10:28:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * INSERT[*] INTO USER (NAME, AGE, EMAIL) VALUES (?, ?, ?)"; SQL statement:
+SELECT * INSERT INTO user (name, age, email) VALUES (?, ?, ?) [42000-200]

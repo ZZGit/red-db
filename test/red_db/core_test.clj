@@ -32,31 +32,13 @@
 (defn stop []
   (mount/stop))
 
-(red-db/bind-connection "sql/user.sql")
-
-(-> (select :name :age)
-    (from :user)
-    (pagination 0 10)
-    (where (AND (eq false :age 10)
-                (like false :name "tom")
-                (OR (eq :age 10)
-                    (like :name "tom"))))
-    (red-db/get-page))
-
-(-> 
-    (from :user)
-    (limit 2)
-    (red-db/get-count))
+;;(red-db/bind-connection "sql/user.sql")
 
 (defn test-transaction []
   (red-db/with-transaction
     (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})
     (throw (Exception. "error"))))
 
-(defn test-transaction2 []
-  (red-db/with-transaction
-    (insert-user! {:name "tom" :age 10 :email "18354@qq.com" :delete_flag 0})
-    (throw (Exception. "error"))))
 
 (deftest test-insert
   (testing "插入单条记录"
