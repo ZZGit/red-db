@@ -14,6 +14,7 @@
 (def join helpers/join)
 (def left-join helpers/left-join)
 (def right-join helpers/right-join)
+(def having helpers/having)
 
 (defn pagination
   [sqlmap page size]
@@ -160,18 +161,13 @@
 
 (defn order-by-asc
   "升序排序"
-  [& args]
-  (apply helpers/order-by (to-asc-vals args)))
+  [sqlmap & args]
+  (apply helpers/order-by (into [sqlmap] (to-asc-vals args))))
 
 (defn- to-desc-vals [ks]
   (mapv (fn [k] [k :desc]) ks))
 
 (defn order-by-desc
   "降序排序"
-  [& args]
-  (apply helpers/order-by (to-desc-vals args)))
-
-(defn having
-  "HAVING ( sql语句 )"
-  [& args]
-  (apply helpers/having args))
+  [sqlmap & args]
+  (apply helpers/order-by (into [sqlmap] (to-desc-vals args))))
