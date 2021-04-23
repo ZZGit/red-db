@@ -95,7 +95,7 @@
   (let [ds (ds/get-datasource opt)
         sql (build/build-page-sql sqlmap)
         size (:limit sqlmap)
-        count (get-count (dissoc sqlmap :limit :offset))
+        count (get-count (dissoc sqlmap :limit :offset :order-by :group-by))
         rows (if (zero? count) [] (jdbc-execute! sql ds))]
     {:rows rows
      :page (int (/ (:offset sqlmap) size))

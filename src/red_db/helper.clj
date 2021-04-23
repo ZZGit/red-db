@@ -7,6 +7,7 @@
 (def from helpers/from)
 (def where helpers/where)
 (def order-by helpers/order-by)
+(def group helpers/group)
 (def limit helpers/limit)
 (def offset helpers/offset)
 (def modifiers helpers/modifiers)
@@ -154,44 +155,23 @@
   (let [vargs (get-where-args args)]
     (when (seq vargs) (into [:and] vargs))))
 
-(defn group
-  "分组：GROUP BY 字段"
-  [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (apply helpers/group (rest args)))
-      (apply helpers/group args))))
-
 (defn- to-asc-vals [ks]
-  (map (fn [k] [k :asc]) ks))
+  (mapv (fn [k] [k :asc]) ks))
 
 (defn order-by-asc
   "升序排序"
   [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (apply helpers/order-by (to-asc-vals (rest args))))
-      (apply helpers/group (to-asc-vals args)))))
+  (apply helpers/order-by (to-asc-vals args)))
 
 (defn- to-desc-vals [ks]
-  (map (fn [k] [k :desc]) ks))
+  (mapv (fn [k] [k :desc]) ks))
 
 (defn order-by-desc
   "降序排序"
   [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (apply helpers/order-by (to-desc-vals (rest args))))
-      (apply helpers/group (to-desc-vals args)))))
+  (apply helpers/order-by (to-desc-vals args)))
 
 (defn having
   "HAVING ( sql语句 )"
   [& args]
-  (let [first-arg (first args)]
-    (if (boolean? first-arg)
-      (when first-arg
-        (apply helpers/having (rest args)))
-      (apply helpers/having args))))
+  (apply helpers/having args))
