@@ -65,7 +65,7 @@
 返回删除的记录个数
 
 ### 查询单条记录
-```
+```clojure
 (require [red-db.core :as red-db])
 (require [red-db.helper :refer :all])
 
@@ -105,7 +105,7 @@
 ```
 
 ### 查询分页记录
-```
+```clojure
 (require [red-db.core :as red-db])
 (require [red-db.helper :refer :all])
 
@@ -117,7 +117,7 @@
 ```
 
 #### 返回数据格式
-```
+```clojure
 {:rows
  [{:id 193,
    :name "tom666",
@@ -137,7 +137,9 @@
 
 
 ### 事务操作
-```
+```clojure
+(require [red-db.core :as red-db])
+
 (red-db/with-transaction
     (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})
     (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"}))
