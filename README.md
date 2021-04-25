@@ -168,4 +168,16 @@
 ## 配置
 
 ### 数据源配置
+```clojure
+{:datasource
+ {:driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
+  :jdbc-url     "jdbc:p6spy:h2:./demo"}}
+```
 ### 逻辑删除配置
+```clojure
+{:red-db
+ {:logic-delete? true
+  :logic-delete-field :delete_flag
+  :logic-delete-value 1
+  :logic-not-delete-value 0}}
+```
