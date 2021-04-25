@@ -145,6 +145,26 @@
     (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"}))
 ```
 
+### 条件构造
+
+#### OR
+#### AND
+#### eq
+#### ne
+#### gt
+#### ge
+#### lt
+#### le
+#### between
+#### like
+#### like-left
+#### like-right
+#### is-null
+#### is-not-null
+#### in
+#### order-by-asc
+#### order-by-desc
+
 ## 配置
 
 ### 数据源配置
