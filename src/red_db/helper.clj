@@ -4,6 +4,10 @@
    [honeysql.helpers :as helpers]))
 
 (def select helpers/select)
+(def update-table helpers/update)
+(def delete-from helpers/delete-from)
+(def delete helpers/delete)
+(def sset helpers/sset)
 (def from helpers/from)
 (def where helpers/where)
 (def order-by helpers/order-by)
