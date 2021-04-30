@@ -6,4 +6,5 @@
  {:logic-delete? false
   :logic-delete-field :delete-flag
   :logic-delete-value true
-  :logic-not-delete-value false}}
+  :logic-not-delete-value false
+  :builder-fn ""}}
