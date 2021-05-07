@@ -1,4 +1,5 @@
-# red-db [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.redcreation/red-db.svg)](https://clojars.org/org.clojars.redcreation/red-db)
+# red-db 
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.redcreation/red-db.svg)](https://clojars.org/org.clojars.redcreation/red-db)
 
 ## 动机
 青岛红创众投科技选择了clojure作为公司的主要技术栈。数据库操作一直使用的是
