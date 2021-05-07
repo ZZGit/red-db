@@ -1,13 +1,13 @@
 # red-db [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.redcreation/red-db.svg)](https://clojars.org/org.clojars.redcreation/red-db)
 
-## 背景
+## 动机
 青岛红创众投科技选择了clojure作为公司的主要技术栈。数据库操作一直使用的是
 [hugsql](https://www.hugsql.org/), 但是在日常使用中发现，hugsql使用起来并不是非常的方便，尤其是单表的操作，增加了复杂度。于是发现了[honeysql](https://github.com/seancorfield/honeysql), 它以简单的map结构代表sql语句，以及提供了一些辅助函数，非常适合简单的语句操作。所以就结合hugsql和honeysql开发了red-db。
 
 ### 特性
-* 简单单表操作不需要再写语句
+* 简单的单表操作不需要再写语句
 * 更友好的分页查询
-* 逻辑删除全局配置，不需要再显示的指定
+* 逻辑删除全局配置，不需要再显式的指定
 
 ## 快速开始
 
@@ -20,9 +20,9 @@ DROP TABLE IF EXISTS user;
 CREATE TABLE user
 (
 	id BIGINT(20) NOT NULL COMMENT '主键ID',
-	name VARCHAR(30) NULL DEFAULT NULL COMMENT '姓名',
-	age INT(11) NULL DEFAULT NULL COMMENT '年龄',
-	email VARCHAR(50) NULL DEFAULT NULL COMMENT '邮箱',
+	user_name VARCHAR(30) NULL DEFAULT NULL COMMENT '姓名',
+	user_age INT(11) NULL DEFAULT NULL COMMENT '年龄',
+	user_email VARCHAR(50) NULL DEFAULT NULL COMMENT '邮箱',
 	PRIMARY KEY (id)
 );
 ```
@@ -83,83 +83,206 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 
 ### 开始使用
 
-首先我们先插入多条数据
+#### 插入单条记录
+我们先从最简单的插入单条数据开始
+
+```clojure
+(require [red-db.core :as red-db])
+
+(red-db/insert!
+ :user
+ {:id 1 :user_name "刘一" :user_age 11 :user_email "liuyi@qq.com"})
+```
+在上面的操作中我们插入了一条记录，返回的结果在不同的数据库会有所不同。
+
+##### H2数据库返回结果
+```clojure
+{:ID 1}
+```
+
+##### Mysql数据库返回结果
+```clojrue
+{:GENERATED_KEY 1}
+```
+
+在上面添加的数据中
+```clojure
+{:id 1 :user_name "刘一" :user_age 11 :user_email "liuyi@qq.com"}
+```
+我们是以下snake_case作为为key的命名方式，这样和数据库的命名方式是一样的。如果你更偏向于clojure的kebab-case的命名方式，你也可以使用这种命名方式。
+```clojure
+(require [red-db.core :as red-db])
+
+(red-db/insert!
+ :user
+ {:id 2 :user-name "陈二" :user-age 12 :user-email "chener@qq.com"})
+```
+
+#### 插入多条记录
+
 ```clojure
 (require [red-db.core :as red-db])
 
 (red-db/insert-multi!
-	:user 
-	[
-		{:id 1 :name "tom1" :age 11 :email "569721086@qq.com"}
-		{:id 2 :name "tom2" :age 12 :email "569721086@qq.com"}
-		{:id 3 :name "tom3" :age 13 :email "569721086@qq.com"}
-		{:id 4 :name "tom4" :age 14 :email "569721086@qq.com"}
-		{:id 5 :name "tom5" :age 15 :email "569721086@qq.com"}
-	])
+ :user
+ [{:id 3 :user_name "张三" :user_age 13 :user_email "zhangsan@qq.com"}
+  {:id 4 :user_name "李四" :user_age 14 :user_email "lisi@qq.com"}])
 ```
 
-然后我们把它全部查出来
+### 查询
+
+查询总共分为两步
+1. 通过[honeysql](https://github.com/seancorfield/honeysql)构建sqlmap
+2. 将sqlmap作为参数传入给red-db提供的查询方法，比如get-one、get-list、get-page等
+
+下面我们看一例子：
+
+#### 查询一条数据
+首先我们要构建sqlmap,我们可以直接构建，也可以通过辅助函数来构建
+
+直接构建sqlmap
+```clojure
+
+(def sqlmap {:select [:*]
+             :from   [:user]
+             :where  [:= :user_name "张三]})
+```
+上面的sqlmap等价sql语句
+```sql
+select * from user where user_name = "张三"
+```
+
+通过辅助函数来构建sqlmap
+辅助函数都放在red-db.helper这个命名空间下
+```clojure
+(require [red-db.helper :refer :all])
+
+(-> (select :*)
+    (from :user)
+    (where (eq :user_name "张三")))
+```
+推荐使用这种方式来创建sqlmap,辅助函数会提供一些便捷的操作，后续我们会讲到。
+
+构建好sqlmap之后，我们就可以用它来查询了
 ```clojure
 (require [red-db.core :as red-db])
 
-(def users (red-db/get-list :user))
-
-(prn users)
+(def sqlmap {:select [:*]
+             :from   [:user]
+             :where  [:= :user_name "张三]})
+			 
+(red-db/get-one sqlmap)
 ```
 
-打印结果
-```
-[
-	{:id 1 :name "tom1" :age 11 :email "569721086@qq.com"}
-	{:id 2 :name "tom2" :age 12 :email "569721086@qq.com"}
-	{:id 3 :name "tom3" :age 13 :email "569721086@qq.com"}
-	{:id 4 :name "tom4" :age 14 :email "569721086@qq.com"}
-	{:id 5 :name "tom5" :age 15 :email "569721086@qq.com"}
-]
+```clojure
+(require [red-db.core :as red-db])
+(require [red-db.helper :refer :all])
+
+(-> (select :*)
+    (from :user)
+    (where (eq :user_name "张三"))
+	(red-db/get-one))
 ```
 
-按照id查询一条记录
+上面两个操作都是等价的，返回结果
+```clojure
+{:id 3, :user_name "张三", :user_age 13, :user_email "zhangsan@qq.com"}
+```
+
+除此之外，red-db还提供了更简单的查询操作
+
 ```clojure
 (require [red-db.core :as red-db])
 
-(def user (red-db/get-one :user {:id 1))
+(red-db/get-one :user {:user_name "张三"})
+```
+辅助函数同样可以应用到这种形式的查询
+```clojure
+(require [red-db.core :as red-db])
+(require [red-db.helper :refer :all])
 
-(prn user)
+;;; 等价于 (red-db/get-one :user {:user_name "张三"}) 
+(red-db/get-one :user {:user_name (eq "张三")})
+
+;; 相当于 select * from user where user_email like "%@qq.com% and user_age < 14"
+(red-db/get-one :user {:user_email (like "@qq.com")
+	                   :user_age (lt 14})
 ```
 
-打印结果
-```
-{:id 1 :name "tom1" :age 11 :email "569721086@qq.com"}
-```
+不过这种简单的形式只支持where条只有AND的情况，更复杂的where条件还是通过前面两种形式来构建。
 
-
-## 使用
-
-### 插入一条记录
+#### 查询多条数据
+查询多条数据和查询单条数据的步骤是相同的，同样支持上面三种形式。只不过返回的结果变为多条
 ```clojure
 (require [red-db.core :as red-db])
 
-(red-db/insert! 
-	:user 
-	{:id 1 :name "tom" :age 18 :email "569721086@qq.com"})
+(red-db/get-list :user {:user_email (like "@qq.com")
+	                    :user_age (lt 13)})
+
+```
+返回数据
+```clojure
+[{:id 1, :user_name "刘一", :user_age 11, :user_email "liuyi@qq.com"}
+ {:id 2, :user_name "陈二", :user_age 12, :user_email "chener@qq.com"}]
 ```
 
-#### 返回结果
-返回添加的主键值
-
-### 插入多条记录
+#### 查询分页记录
 ```clojure
 (require [red-db.core :as red-db])
+(require [red-db.helper :refer :all])
 
-(red-db/insert-multi! :user 
-	[{:name "tom" :age 18 :email "18354@qq.com"}
-     {:name "jerry" :age 20 :email "18354@qq.com"}])
-	 
-;;=> INSERT INTO user (name, age, email) VALUES ('tom', 18, '18354@qq.com'), ('jerry', 20, '18354@qq.com')
+(-> (select :*) 
+	(from :user)
+	(where (AND (like :user_email "@qq.com")
+	            (lt :user_age 13)))
+	(pagination 0 10)
+	(red-db/get-page))
 ```
 
-#### 返回结果
-返回插入数据主键值数组
+返回数据
+```clojure
+{:rows   ;;查询记录数据
+ [{:id 1, :user_name "刘一", :user_age 11, :user_email "liuyi@qq.com"}
+  {:id 2, :user_name "陈二", :user_age 12, :user_email "chener@qq.com"}],
+ :page 0,        ;; 当前分页
+ :size 10,       ;; 每页的数量
+ :total-count 2, ;; 总条数
+ :total-page 1   ;; 总页数
+ }
+```
+
+### 动态的构建查询条件
+
+通过辅助函数我们可以很友好的动态的构建where条件
+```clojure
+
+``````clojure
+(require [red-db.core :as red-db])
+(require [red-db.helper :refer :all])
+
+(def age 12)
+
+(defn valid-age? [age]
+   (not (nil? age))
+
+(-> (select :*)
+    (from :user)
+    (where (eq (valid-age? age)  :user_age age))
+	(red-db/get-list))
+```
+上面操作最终会执行
+```sql
+select * from user where user_age=12
+```
+如果我们把age变成nil
+```clojure
+(def age nil)
+```
+最终执行的语句就变成了
+```sql
+select * from user
+```
+
 
 ### 更新记录
 ```clojure
@@ -168,14 +291,9 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 
 (-> (update-table :user) 
 	(sset {:name "tom666"}) 
-	(where (eq :id 193)) 
+	(where (eq :id 1)) 
 	(red-db/update!))
-	
-;;=> UPDATE user SET name = 'tom666' WHERE id = 193
 ```
-
-#### 返回结果
-返回更新的记录个数
 
 ### 删除记录
 ```clojure
@@ -188,79 +306,6 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 	
 ;;=> DELETE FROM user WHERE id = 227
 ```
-#### 返回结果
-返回删除的记录个数
-
-### 查询单条记录
-```clojure
-(require [red-db.core :as red-db])
-(require [red-db.helper :refer :all])
-
-;; 简单的形式，只满足where条件只有AND的情况
-(red-db/get-one :user {:id 226 :age (lt 20)})
-;;=> SELECT * FROM user WHERE (id = 226 AND age < 20)
-
-;; 完整的形式
-(-> (select :*) 
-	(from :user) 
-	(where (AND (eq :id 226) 
-		        (OR (eq :age 20) 
-					(like :name "tom"))))
-	(red-db/get-one))
-
-;;=> sql语句: SELECT * FROM user WHERE id = 226 AND (age = 20 OR name like '%tom%')
-```
-
-### 查询多条记录
-```clojure
-(require [red-db.core :as red-db])
-(require [red-db.helper :refer :all])
-
-;; 简单的形式，只满足where条件只有AND的情况
-(red-db/get-list :user {:id 226 :age (lt 20)})
-;;=> SELECT * FROM user WHERE (id = 226 AND age < 20)
-
-;; 完整的形式
-(-> (select :*) 
-	(from :user) 
-	(where (AND (eq :id 226) 
-		        (OR (eq :age 20) 
-					(like :name "tom"))))
-	(red-db/get-list))
-
-;;=> sql语句: SELECT * FROM user WHERE id = 226 AND (age = 20 OR name like '%tom%')
-```
-
-### 查询分页记录
-```clojure
-(require [red-db.core :as red-db])
-(require [red-db.helper :refer :all])
-
-(-> (select :*) 
-	(from :user)
-	(where (like :name "tom"))
-	(pagination 0 10)
-	(red-db/get-page))
-```
-
-#### 返回数据格式
-```clojure
-{:rows
- [{:id 193,
-   :name "tom666",
-   :age 10,
-   :email "18354@qq.com",
-   :delete-flag 0}
-  {:id 194,
-   :name "tom",
-   :age 10,
-   :email "18354@qq.com",
-   :delete-flag 0}],
- :page 0,
- :size 10,
- :total-count 5,
- :total-page 1}
-```
 
 
 ### 事务操作
@@ -272,10 +317,30 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
     (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"}))
 ```
 
-### 条件构造
+### 辅助函数
 
 #### OR
+```clojure
+(-> (select :*) 
+	(from :user)
+	(where (OR (like :user_email "qq")
+	            (eq :user_age 13)))
+```
+等价于
+```sql
+select * from user where user_email like '%qq%' or user_age=13
+```
 #### AND
+```clojure
+(-> (select :*) 
+	(from :user)
+	(where (AND (like :user_email "qq")
+	            (eq :user_age 13)))
+```
+等价于
+```sql
+select * from user where user_email like '%qq%' and user_age=13
+```
 #### eq
 #### ne
 #### gt

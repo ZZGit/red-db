@@ -34,19 +34,29 @@
 
 ;;(red-db/bind-connection "sql/user.sql")
 
+
+(-> (select :*)
+    (from :user)
+    (where (eq :user_name "张三")))
+
 (defn test-transaction []
   (red-db/with-transaction
-    (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})
+    (red-db/insert!
+     :user
+     {:user_name "tom" :user_age 10 :user_email "18354@qq.com"})
     (throw (Exception. "error"))))
-
 
 (deftest test-insert
   (testing "插入单条记录"
-    (let [row (red-db/insert! :user {:name "tom" :age 10 :email "18354@qq.com"})]
+    (let [row (red-db/insert!
+               :user
+               {:user_name "tom" :user_age 10 :user_email "18354@qq.com"})]
       (is (not (nil? row)))))
   (testing "插入多条记录"
-    (let [rows (red-db/insert-multi! :user [{:name "tom" :age 10 :email "18354@qq.com"}
-                                     {:name "jerry" :age 11 :email "18354@qq.com"}])]
+    (let [rows (red-db/insert-multi!
+                :user
+                [{:id 3 :user_name "tom" :user_age 10 :user_email "18354@qq.com"}
+                 {:id 4 :user_name "jerry" :user_age 15 :user_email "18354@qq.com"}])]
       (is (= 2 (count rows))))))
 
 #_(deftest test-get-one
