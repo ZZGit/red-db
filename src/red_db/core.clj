@@ -3,14 +3,20 @@
   (:require
    [red-db.ds :as ds]
    [next.jdbc :as jdbc]
+   [red-db.config :as config]
    [conman.core :as conman]
    [next.jdbc.result-set :as rs]
    [red-db.build-sql :as build]
    [honeysql.helpers :as help]))
 
-(def ^:private exec-opt
-  {:return-keys true
-   :builder-fn rs/as-unqualified-kebab-maps})
+(defmacro create-exec-opt
+  []
+  (let [builder (config/get-result-set-builder)]
+    `(def ^:private exec-opt
+       {:return-keys true
+        :builder-fn (or ~builder rs/as-unqualified-maps)})))
+
+(create-exec-opt)
 
 (defn- jdbc-execute! [sql ds]
   (jdbc/execute! ds sql exec-opt))

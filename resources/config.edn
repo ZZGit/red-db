@@ -7,4 +7,5 @@
   :logic-delete-field :delete-flag
   :logic-delete-value true
   :logic-not-delete-value false
-  :builder-fn ""}}
+  :result-set-builder next.jdbc.result-set/as-unqualified-kebab-maps
+  }}

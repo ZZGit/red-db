@@ -68,7 +68,7 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 ```clojure
 (ns custombackend.user
   (:require
-   [red-db.ds]
+   [red-db.core]
    ...
    ))
 ```
@@ -76,7 +76,7 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 ```clojure
 (ns custombackend.core
   (:require
-   [red-db.ds]
+   [red-db.core]
    ...
    ))
 ```

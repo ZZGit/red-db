@@ -44,3 +44,8 @@
   (let [{:keys [logic-delete-field
                 logic-not-delete-value]} (get-db-config)]
     {logic-delete-field logic-not-delete-value}))
+
+(defn get-result-set-builder
+  "获取配置的result-set-builder"
+  []
+  (:result-set-builder (get-db-config)))
