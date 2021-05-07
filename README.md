@@ -65,7 +65,7 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 ```
 上面配置中`custombackend.user`是作为cider启动后默认进入的namespace. 而`custombackend.core` 是main函数的namespace。我们通过java -jar 运行jar包就会进入这个namespace.
 
-最后我们在上面那两个namespace中,把red-db依赖进来，比如
+我们需要在上面那两个namespace中,把red-db依赖进来，比如
 ```clojure
 (ns custombackend.user
   (:require
@@ -146,7 +146,7 @@ red-db自动读取config.edn配置文件，取配置文件中:datasource或:data
 
 (def sqlmap {:select [:*]
              :from   [:user]
-             :where  [:= :user_name "张三]})
+             :where  [:= :user_name "张三"]})
 ```
 上面的sqlmap等价sql语句
 ```sql
@@ -170,7 +170,7 @@ select * from user where user_name = "张三"
 
 (def sqlmap {:select [:*]
              :from   [:user]
-             :where  [:= :user_name "张三]})
+             :where  [:= :user_name "张三"]})
 			 
 (red-db/get-one sqlmap)
 ```
@@ -217,6 +217,23 @@ select * from user where user_name = "张三"
 ```clojure
 (require [red-db.core :as red-db])
 
+;; 形式一
+(def sqlmap {:select [:*]
+             :from   [:user]
+             :where  [:and [:like :user_email "%@qq.com%"]
+			               [:< :user_age 13]})
+
+(red-db/get-list sqlmap)
+
+;; 形式二
+(-> (select :*)
+    (from :user)
+	(where (AND (like :user_email "@qq.com")
+	            (lt :user_age 13)))
+    (red-db/get-list))
+
+
+;; 形式三
 (red-db/get-list :user {:user_email (like "@qq.com")
 	                    :user_age (lt 13)})
 
