@@ -359,15 +359,15 @@ CREATE TABLE t_user
 ;; 1. 传入一个参数
 (red-db/get-list :user {:name (eq "张三")})
 
-;; 1. 传入两个参数
+;; 2. 传入两个参数
 (-> (select :*)
     (from :user)
 	(where (eq :name "张三")))
 	
-;; 2. 传入三个参数
+;; 3. 传入三个参数
 (-> (select :*)
     (from :user)
-	(where (eq :name "张三")))
+	(where (eq true :name "张三")))
 ```
 #### ne
 不等于 <>
