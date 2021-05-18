@@ -3,7 +3,7 @@
 
 ## 动机
 青岛红创众投科技选择了clojure作为公司的主要技术栈。数据库操作使用的是
-[hugsql](https://www.hugsql.org/), hugsql比较灵活，它会有把sql语句转换成clojure函数。但是使用起来还是比较繁琐，即使简单的单表操作也得写一条sql语句。之前有同事尝试一些改进工作，把hugsql常用的单表操作封装了一下，[点击查看](http://blog.3vyd.com/blog/posts-output/2020-10-10-hugsql-%E9%80%9A%E7%94%A8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/)。但是还是有些不完善的地方，比如分页查询、逻辑删除。当我发现了[honeysql](https://github.com/seancorfield/honeysql), 它以简单的map结构代表sql语句，以及提供了一些辅助函数，非常适合简单的语句操作。所以就结合hugsql和honeysql开发了red-db。
+[hugsql](https://www.hugsql.org/), hugsql比较灵活，它会把sql语句转换成clojure函数。但是使用起来还是比较繁琐，即使简单的单表操作也得写一条sql语句。之前有同事尝试一些改进工作，把hugsql常用的单表操作封装了一下，[点击查看](http://blog.3vyd.com/blog/posts-output/2020-10-10-hugsql-%E9%80%9A%E7%94%A8%E5%A4%84%E7%90%86%E6%96%B9%E6%B3%95/)。但是还是有些不完善的地方，比如分页查询、逻辑删除。当我发现了[honeysql](https://github.com/seancorfield/honeysql), 它以简单的map结构代表sql语句，以及提供了一些辅助函数，非常适合简单的语句操作。所以就结合hugsql和honeysql开发了red-db。
 
 ## 安装
 在project.clj中添加red-db依赖
@@ -371,46 +371,57 @@ CREATE TABLE t_user
 ```
 #### ne
 不等于 <>
+
 使用方式同辅助函数eq
 
 #### gt
 大于 >
+
 使用方式同辅助函数eq
 
 #### ge
 大于等于 >=
+
 使用方式同辅助函数eq
 
 #### lt
 小于 <
+
 使用方式同辅助函数eq
 
 #### le
 小于等于 <=
+
 使用方式同辅助函数eq
 
 #### between
 BETWEEN 值1 AND 值2
+
 使用方式同辅助函数eq
 
 #### like
 LIKE '%值%'
+
 使用方式同辅助函数eq
 
 #### like-left
 LIKE '%值'
+
 使用方式同辅助函数eq
 
 #### like-right
 LIKE '值%'
+
 使用方式同辅助函数eq
 
 #### is-null
 IS NULL
+
 使用方式同辅助函数eq
 
 #### is-not-null
  IS NOT NULL
+ 
 使用方式同辅助函数eq
 
 #### in
