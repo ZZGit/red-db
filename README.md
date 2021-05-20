@@ -170,7 +170,7 @@ CREATE TABLE t_user
  {:result-set-builder next.jdbc.result-set/as-unqualified-kebab-maps}
  }
 ```
-然后在执行函数
+举例:
 ```clojure
 (require [red-db.core :as red-db])
 
