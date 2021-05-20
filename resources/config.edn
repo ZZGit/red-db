@@ -5,7 +5,7 @@
   :jdbc-url    "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
   }
  :red-db
- {:logic-delete? false
+ {:logic-delete? true
   :logic-delete-field :delete-flag
   :logic-delete-value true
   :logic-not-delete-value false

@@ -372,67 +372,121 @@ CREATE TABLE t_user
 #### ne
 不等于 <>
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### gt
 大于 >
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### ge
 大于等于 >=
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### lt
 小于 <
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### le
 小于等于 <=
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### between
 BETWEEN 值1 AND 值2
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### like
 LIKE '%值%'
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### like-left
 LIKE '%值'
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### like-right
 LIKE '值%'
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### is-null
 IS NULL
 
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### is-not-null
  IS NOT NULL
  
-使用方式同辅助函数eq
+三种使用方式同辅助函数eq
 
 #### in
+```clojure
+;; 三种使用场景
+
+;; 1. 传入一个参数
+(red-db/get-list :user {:id (in [1 2 3])})
+;=> select * from user where id in (1, 2, 3)
+
+;; 2. 传入两个参数
+(-> (select :*)
+    (from :user)
+	(where (in :id [1 2 3])))
+	
+;; 3. 传入三个参数
+(-> (select :*)
+    (from :user)
+	(where (in true :id [1 2 3])))
+```
+
+#### group
+```clojure
+(-> (select :*)
+    (from :user)
+	(group :id :name)))
+
+;=> SELECT * FROM user GROUP BY id, name
+```
+
+#### order-by
+```clojure
+(-> (select :*)
+    (from :user)
+	(order-by [:id :desc] [:name :asc] :email)))
+
+;=> SELECT * FROM user ORDER BY id DESC, name ASC, email
+```
 
 #### order-by-asc
+```clojure
+(-> (select :*)
+    (from :user)
+	(order-by-asc :id :name)))
+
+;=> SELECT * FROM user ORDER BY id ASC, name ASC
+```
 
 #### order-by-desc
+```clojure
+(-> (select :*)
+    (from :user)
+	(order-by-desc :id :name)))
+
+;=> SELECT * FROM user ORDER BY id DESC, name DESC
+```
+
+#### limit
+
+#### offset
 
 ## 扩展
 
 ### 逻辑删除配置
+在config.edn中配置
 ```clojure
 {:red-db
  {:logic-delete? true
@@ -441,12 +495,58 @@ IS NULL
   :logic-not-delete-value 0}}
 ```
 
+#### 属性说明
+
+| 名称                    | 说明             |
+|-------------------------|------------------|
+| :logic-delete?          | 是否开启逻辑删除 |
+| :logic-delete-field     | 逻辑删除的表字段 |
+| :logic-delete-value     | 逻辑删除的值     |
+| :logic-not-delete-value | 逻辑未删除的值   |
+
+#### 逻辑删除说明
+
+逻辑删除开启后会影响下面的操作
+1. 执行插入操作，自动给逻辑删除的字段赋值
+```clojure
+(red-db/insert! :user {:id 1 :name "张三"})
+
+=> INSERT INTO t_user (id, name, delete_flag) VALUES (2, '张三', 0)
+```
+
+2. 执行查询操作，自动添加逻辑未删除的条件
+```clojure
+(red-db/get-list :user {:id 1})
+
+=> SELECT * FROM t_user WHERE id =1 AND delete_flag = 0
+```
+
+3. 执行删除操作，变成更新操作
+```clojure
+(red-db/delete! :user {:id 1})
+
+=> UPDATE t_user SET delete_flag = 1 WHERE id = 1
+```
+
 ### 返结果命名配置
+在config.edn中配置
 ```clojure
 {:red-db
  {:result-set-builder next.jdbc.result-set/as-unqualified-kebab-maps}
  }
 ```
+`:result-set-builder` 属性值为转换函数，可选值如下
+
+| 属性                                           | 结果格式举例                     |
+|------------------------------------------------|----------------------------------|
+| next.jdbc.result-set/as-maps                   | :user/user_id :ORDER/orderId     |
+| next.jdbc.result-set/as-unqualified-maps       | :user_id, :orderId               |
+| next.jdbc.result-set/as-lower-maps             | :address/user_id, :order/orderid |
+| next.jdbc.result-set/as-unqualified-lower-maps | :user_id, :orderid               |
+| next.jdbc.result-set/as-unqualified-kebab-maps | :user-id, :order-id               |
+
+
+
 
 ## hugsql增强
 正如开头所说的，red-db是honeysql和hugsql的结合。在某些比较复杂的查询,比如多表统计，使用hugsql还是比较方便的。虽然hoenysql也支持多表查询, 但是结构一复杂，hoenysql这种语法反而变的繁琐，比如拿[hoenysql](https://github.com/seancorfield/honeysql)中举的例子
