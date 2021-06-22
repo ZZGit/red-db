@@ -1,8 +1,10 @@
 (ns red-db.config
   (:require
-    [cprop.core :refer [load-config]]
-    [cprop.source :as source]
-    [mount.core :refer [args defstate]]))
+   [cprop.source :as source]
+   [cprop.core :refer [load-config]]
+   [mount.core :refer [args defstate]]
+   [clojure.set :refer [intersection]]
+   [camel-snake-kebab.core :refer [->kebab-case-keyword]]))
 
 (defn get-datasource-config
   "获取数据源"
@@ -17,11 +19,26 @@
 (defn- get-db-config []
   (:red-db (load-config)))
 
+(defn logic-delete-exclude-tables?
+  "是不是逻辑删除排查的表"
+  [tables]
+  (let [exclude-tables (or (:logic-delete-exclude-tables (get-db-config)) [])]
+    (if (pos? (count exclude-tables))
+      (pos?
+       (count
+        (intersection
+         (set (map ->kebab-case-keyword tables))
+         (set (map ->kebab-case-keyword exclude-tables)))))
+      false)))
+
 (defn logic-delete?
   "是否逻辑删除"
-  []
-  (let [result (:logic-delete? (get-db-config))]
-    (if (boolean? result) result false)))
+  ([]
+   (let [ld? (:logic-delete? (get-db-config))]
+     (if (boolean? ld?) ld? false)))
+  ([opt]
+   (let [ld? (:*logic-delete? opt)]
+     (if (boolean? ld?) ld? (logic-delete?)))))
 
 (defn get-logic-delete
   "逻辑删除条件"

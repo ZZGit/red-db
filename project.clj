@@ -1,4 +1,4 @@
-(defproject org.clojars.redcreation/red-db "0.1.0-SNAPSHOT"
+(defproject org.clojars.redcreation/red-db "0.2.0-SNAPSHOT"
   :description "红创数据库操作"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -15,6 +15,7 @@
              {:resource-paths ["resources"]
               :dependencies [[com.h2database/h2 "1.4.200"]
                              [mysql/mysql-connector-java "8.0.16"]
+                             [org.xerial/sqlite-jdbc "3.34.0"]
                              [migratus "1.3.5"]
                              [p6spy/p6spy "3.8.7"]]}}
   :repl-options {:init-ns red-db.core-test})

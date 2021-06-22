@@ -11,8 +11,8 @@
 (def config {:store                :database
              :migration-dir        "migrations/"
              :init-script          "init.sql"
-             :db {:connection-uri
-                  "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
+             :db {:connection-uri "jdbc:sqlite:sample.db"
+                  ;;"jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
                   ;;"jdbc:h2:./demo"
                   }})
 
@@ -34,10 +34,11 @@
 
 ;;(red-db/bind-connection "sql/user.sql")
 
-
-(-> (select :*)
-    (from :user)
-    (where (eq :user_name "张三")))
+(defn test-query []
+  (-> (select :*)
+      (from :t_user)
+      (where (eq :user_name "张三"))
+      (red-db/get-list)))
 
 (defn test-transaction []
   (red-db/with-transaction
@@ -49,7 +50,7 @@
 (deftest test-insert
   (testing "插入单条记录"
     (let [row (red-db/insert!
-               :user
+               :t_user
                {:user_name "tom" :user_age 10 :user_email "18354@qq.com"})]
       (is (not (nil? row)))))
   (testing "插入多条记录"

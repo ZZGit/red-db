@@ -16,11 +16,11 @@
     (dissoc sqlmap :where)))
 
 (defn format-sql [sqlmap]
-  (-> sqlmap
-      (sql/format)))
+  (-> sqlmap (sql/format)))
 
-(defn add-logic-delete-where [sqlmap]
-  (if (config/logic-delete?)
+(defn add-logic-delete-where [sqlmap opt]
+  (if (and (not (config/logic-delete-exclude-tables? (:from sqlmap)))
+           (config/logic-delete? opt))
     (->> (:from sqlmap)
          (map config/get-logic-delete-where)
          (reduce helper/merge-where sqlmap))
@@ -51,16 +51,16 @@
   [args]
   (-> args
       (build-sqlmap)
-      (add-logic-delete-where)
+      (add-logic-delete-where (last args))
       (add-select-*)
       (dissoc-empty-where)
       (format-sql)))
 
 (defn build-page-sql
   "构造分页查询sql语句"
-  [sqlmap]
+  [sqlmap opt]
   (-> sqlmap
-      (add-logic-delete-where)
+      (add-logic-delete-where opt)
       (add-select-*)
       (dissoc-empty-where)
       (format-sql)))
@@ -81,7 +81,7 @@
   [args]
   (-> args
       (build-count-sqlmap)
-      (add-logic-delete-where)
+      (add-logic-delete-where (last args))
       (dissoc-empty-where)
       (format-sql)))
 
@@ -129,23 +129,33 @@
       (dissoc-empty-where)
       (format-sql)))
 
+(defn- logic-delete?
+  [args]
+  (let [first-arg (first args)]
+    (if (keyword? first-arg)
+      (and (not (config/logic-delete-exclude-tables? [first-arg]))
+           (config/logic-delete? (last args)))
+      (and (not (config/logic-delete-exclude-tables? (:delete-from first-arg)))
+           (config/logic-delete? (last args))))))
+
 (defn build-deldete-sql
   [args]
-  (if (config/logic-delete?)
+  (if (logic-delete? args)
     (build-logic-delete-sql args)
     (build-physics-deldete-sql args)))
 
 (defn build-update-sql
   "构造更新sql语句"
-  [sqlmap]
+  [sqlmap opt]
   (-> sqlmap
-      (add-logic-delete-where)
+      (add-logic-delete-where opt)
       (dissoc-empty-where)
       (format-sql)))
 
 (defn build-insert-row
   "构造insert插入的记录"
-  [row]
-  (if (config/logic-delete?)
+  [table row opt]
+  (if (and (not (config/logic-delete-exclude-tables? [table]))
+           (config/logic-delete? opt))
     (merge row (config/get-logic-delete-insert))
     row))

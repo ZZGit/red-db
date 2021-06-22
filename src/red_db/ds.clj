@@ -20,5 +20,7 @@
   数据源来源于三个方面：1：事务的数据源。2：传参的数据源。3：默认数据源
   优先级 事务数据源 > 传参的数据源 > 默认数据源
   "
-  [& opt]
-  (or *t-ds* (or (:*ds* (first opt)) *ds*)))
+  ([opt]
+   (or *t-ds* (or (:*ds* opt) *ds*)))
+  ([]
+   (get-datasource nil)))

@@ -8,7 +8,7 @@
 ## 安装
 在project.clj中添加red-db依赖
 ```clojure
-[org.clojars.redcreation/red-db "0.1.0-SNAPSHOT"]
+[org.clojars.redcreation/red-db "0.2.0-SNAPSHOT"]
 ```
 
 ## 配置
@@ -492,17 +492,19 @@ IS NULL
  {:logic-delete? true
   :logic-delete-field :delete_flag
   :logic-delete-value 1
-  :logic-not-delete-value 0}}
+  :logic-not-delete-value 0
+  :logic-delete-exclude-tables [:user :order]}}
 ```
 
 #### 属性说明
 
-| 名称                    | 说明             |
-|-------------------------|------------------|
-| :logic-delete?          | 是否开启逻辑删除 |
-| :logic-delete-field     | 逻辑删除的表字段 |
-| :logic-delete-value     | 逻辑删除的值     |
-| :logic-not-delete-value | 逻辑未删除的值   |
+| 名称                         | 说明               |
+|------------------------------|--------------------|
+| :logic-delete?               | 是否开启逻辑删除   |
+| :logic-delete-field          | 逻辑删除的表字段   |
+| :logic-delete-value          | 逻辑删除的值       |
+| :logic-not-delete-value      | 逻辑未删除的值     |
+| :logic-delete-exclude-tables | 不参与逻辑删除的表 |
 
 #### 逻辑删除说明
 
@@ -543,7 +545,7 @@ IS NULL
 | next.jdbc.result-set/as-unqualified-maps       | :user_id, :orderId               |
 | next.jdbc.result-set/as-lower-maps             | :address/user_id, :order/orderid |
 | next.jdbc.result-set/as-unqualified-lower-maps | :user_id, :orderid               |
-| next.jdbc.result-set/as-unqualified-kebab-maps | :user-id, :order-id               |
+| next.jdbc.result-set/as-unqualified-kebab-maps | :user-id, :order-id              |
 
 
 

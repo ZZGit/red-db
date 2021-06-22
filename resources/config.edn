@@ -1,6 +1,7 @@
-{:database-url_b "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
- :datasource
- {:driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
+{:database-url ;;"jdbc:sqlite:sample.db"
+ "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
+ ;;:datasource
+ #_{:driver-class-name "com.p6spy.engine.spy.P6SpyDriver"
   ;;:jdbc-url     "jdbc:p6spy:h2:./demo"
   :jdbc-url    "jdbc:p6spy:mysql://localhost:3306/red_db?user=root&password=root&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Hongkong"
   }
@@ -9,5 +10,6 @@
   :logic-delete-field :delete-flag
   :logic-delete-value true
   :logic-not-delete-value false
+  :logic-delete-exclude-tables [:t_user]
   ;;:result-set-builder next.jdbc.result-set/as-unqualified-kebab-maps
   }}
